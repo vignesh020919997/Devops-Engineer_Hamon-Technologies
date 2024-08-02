@@ -1,0 +1,39 @@
+Question 2
+Tell us about a scenario where you had to make changes to an existing Infrastructure-as-code setup to introduce a new change/fix a bug. What are the challenges you faced? How did you go about understanding other people's IAC code and modifying it?
+
+
+
+Here is a scenario where I had to make changes to an existing Infrastructure-as-Code setup:
+Scenario
+I was tasked with introducing a new feature to an existing AWS infrastructure that was managed using Terraform. 
+
+The infrastructure included an EC2 instance, an RDS database, and some supporting resources like security groups and IAM roles.
+
+The new feature required adding an additional EFS file system to the EC2 instance. I needed to understand the existing Terraform code, identify where to make the changes, and implement the new EFS resource without breaking anything else.
+
+Challenges
+The main challenges I faced were:
+Understanding the existing code: The Terraform code was written by another team member who had since left the company. I needed to spend time reading through the code to understand the overall architecture, resource dependencies, and best practices used.
+
+Identifying the right place to make changes: With multiple resources and modules, it wasn't immediately clear where to add the new EFS resource. I had to trace the EC2 instance resource and its dependencies to determine the appropriate location.
+
+Avoiding breaking existing resources: I had to be very careful not to modify anything that would impact the existing EC2 instance or RDS database. Any changes to shared resources like security groups or IAM roles could have unintended consequences.
+
+Handling resource dependencies: The new EFS file system needed to be properly connected to the EC2 instance. I had to ensure the resource dependencies were defined correctly so the EFS would be created and mounted properly.
+
+Approach
+Here's how I went about making the changes:
+Reviewed the existing Terraform code: I spent time carefully reading through the code to understand the overall infrastructure, resource types, and module structure. I made notes on the EC2 instance and its dependencies.
+Researched the EFS resource in Terraform: I reviewed the Terraform documentation on the aws_efs_file_system and aws_efs_mount_target resources to understand how to define them and their required arguments.
+
+Identified the appropriate location to add the new resources: Based on my understanding of the EC2 instance and its dependencies, I determined the best place to add the new EFS resources was in the same module as the EC2 instance.
+
+Wrote the new EFS resources: I added the aws_efs_file_system and aws_efs_mount_target resources to the EC2 module, referencing the existing VPC and subnet IDs. I also added the necessary security group rules to allow traffic between the EC2 instance and EFS.
+
+Tested the changes locally: I ran terraform plan and terraform apply on my local environment to ensure the new resources were being created correctly without impacting the existing infrastructure.
+
+Deployed the changes to staging: I pushed the branch with the new changes to our staging environment to verify everything was working as expected. I tested the EC2 instance could mount the new EFS file system.
+
+Merged the changes to production: After verifying the changes in staging, I merged the branch to the main branch which triggered a production deployment. I monitored the production environment to ensure the new EFS file system was created and mounted successfully.
+
+By taking the time to understand the existing code, researching the required resources, and carefully testing the changes, I was able to successfully introduce the new EFS file system without any issues. Maintaining clear communication with the team and following best practices for Terraform code organization helped make the process smoother.
